@@ -110,12 +110,10 @@ def get_item_history(item_id: str):
     history_list = []
     history_ref = db.collection('history').where('item_id', '==', item_id).order_by('timestamp', direction=firestore.Query.DESCENDING).get()
     for doc in history_ref:
-        history_data = doc.to_dict()
+        history_data = doc.to_dict()        
         
-        # Modificado para obter apenas as alterações dos campos
         changed_fields = history_data.get('changed_fields', {})
         
-        # Adiciona apenas as alterações dos campos ao histórico
         history_list.append({
             'id': doc.id,
             'item_id': item_id,
