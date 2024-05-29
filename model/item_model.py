@@ -8,5 +8,5 @@ class ItemModel(BaseModel):
     data_nascimento: date
     genero: str
     nacionalidade: str
-    data_criacao: Optional[datetime] = None 
-    data_atualizacao: Optional[datetime] = None
+    data_criacao: Optional[date] = None 
+    data_atualizacao: Optional[date] = None

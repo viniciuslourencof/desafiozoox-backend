@@ -22,6 +22,8 @@ class ItemUpdate(BaseModel):
     data_nascimento: date 
     genero: str
     nacionalidade: str 
+    data_criacao: Optional[date] = None 
+    data_atualizacao: Optional[date] = None
 
 class HistoryItem(BaseModel):
     id: str
@@ -58,8 +60,13 @@ app_public.add_middleware(
 @app_public.post("/items")
 def create_item(item: ItemUpdate):
     item_data = item.model_dump(exclude_unset=True)
+    
     if 'data_nascimento' in item_data and item_data['data_nascimento']:
         item_data['data_nascimento'] = item_data['data_nascimento'].isoformat()
+
+    if 'data_criacao' in item_data and item_data['data_criacao']:
+        item_data['data_criacao'] = item_data['data_criacao'].isoformat()            
+
     new_item = save_item(item_data)  
     return {"message": "Item created successfully", "item": new_item}
 
@@ -81,9 +88,14 @@ def delete_item(item_id: str):
 
 @app_public.put("/items/{item_id}")
 def update_item_endpoint(item_id: str, item_update: ItemUpdate):
-    item_data = item_update.model_dump(exclude_unset=True)        
+    item_data = item_update.model_dump(exclude_unset=True)       
+
     if 'data_nascimento' in item_data and item_data['data_nascimento']:
-        item_data['data_nascimento'] = item_data['data_nascimento'].isoformat()    
+        item_data['data_nascimento'] = item_data['data_nascimento'].isoformat()        
+
+    if 'data_atualizacao' in item_data and item_data['data_atualizacao']:
+            item_data['data_atualizacao'] = item_data['data_atualizacao'].isoformat()                    
+
     try:        
         updated_item = update_item(item_id, item_data)
         return {"message": "Item updated successfully", "item": updated_item}
