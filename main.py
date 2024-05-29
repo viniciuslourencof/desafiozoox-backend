@@ -4,10 +4,9 @@ from service.item_service import save_item, get_items, remove_item, save_items, 
 import os
 import pandas as pd
 import io
-from datetime import date, datetime
-from typing import Optional, List
-from pydantic import BaseModel
+from typing import  List
 from dotenv import load_dotenv
+from model.item_model import ItemModel, HistoryItem
 
 load_dotenv()
 
@@ -16,21 +15,7 @@ app_public = FastAPI(openapi_prefix='/public')
 app_private = FastAPI(openapi_prefix='/api')
 
 app.mount("/public", app_public)
-app.mount("/api", app_private)
-
-class ItemUpdate(BaseModel):
-    nome: str
-    data_nascimento: date 
-    genero: str
-    nacionalidade: str 
-    data_criacao: Optional[date] = None 
-    data_atualizacao: Optional[date] = None
-
-class HistoryItem(BaseModel):
-    id: str
-    item_id: str
-    changed_fields: dict    
-    timestamp: str      
+app.mount("/api", app_private)   
 
 origins = ["*"]
 
@@ -59,7 +44,8 @@ app_public.add_middleware(
 )
 
 @app_public.post("/items")
-def create_item(item: ItemUpdate):
+def create_item(item: ItemModel):
+
     item_data = item.model_dump(exclude_unset=True)
 
     if 'data_nascimento' in item_data and item_data['data_nascimento']:
@@ -88,14 +74,14 @@ def delete_item(item_id: str):
     return remove_item(item_id)
 
 @app_public.put("/items/{item_id}")
-def update_item_endpoint(item_id: str, item_update: ItemUpdate):
+def update_item_endpoint(item_id: str, item_update: ItemModel):
     item_data = item_update.model_dump(exclude_unset=True)       
 
     if 'data_nascimento' in item_data and item_data['data_nascimento']:
         item_data['data_nascimento'] = item_data['data_nascimento'].isoformat()        
 
     if 'data_atualizacao' in item_data and item_data['data_atualizacao']:
-            item_data['data_atualizacao'] = item_data['data_atualizacao'].isoformat()                    
+        item_data['data_atualizacao'] = item_data['data_atualizacao'].isoformat()                    
 
     try:        
         updated_item = update_item(item_id, item_data)
