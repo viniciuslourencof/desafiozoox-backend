@@ -20,7 +20,7 @@ Depois, rode o servidor:
 
 ```bash
 
-uvicorn main:app --reload
+uvicorn main:app --reload --env-file .env
 
 ```
 
