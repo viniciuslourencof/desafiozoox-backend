@@ -72,16 +72,14 @@ def update_item(item_id: str, item_data: dict):
     
     changed_fields = {}
     for key, old_value in old_data.items():
-        new_value = updated_data.get(key)
-        
-        print(new_value)
-        print(old_value)
-        
+        new_value = updated_data.get(key)        
+                
         if new_value is not None and new_value != old_value:
-            changed_fields[key] = {
-                'valor_antigo': old_value,
-                'valor_novo': new_value
-            }                
+            if key != 'data_atualizacao':
+                changed_fields[key] = {
+                    'valor_antigo': old_value,
+                    'valor_novo': new_value
+                }                
     
     history_ref = db.collection('history').document()
     history_ref.set({
