@@ -1,5 +1,11 @@
 # Backend
 
+## Pré Requisitos
+
+Para executar esse projeto, você precisa ter instalado em sua máquina:
+
+- [Python](https://www.python.org/)
+
 ## Como rodar em Ambiente de Desenvolvimento
 
 Primeiro, instale as dependências:
