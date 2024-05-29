@@ -68,9 +68,8 @@ def update_item(item_id: str, item_data: dict):
     item_ref.update(item_data)    
     
     updated_item_snapshot = item_ref.get()
-    updated_data = updated_item_snapshot.to_dict()    
+    updated_data = updated_item_snapshot.to_dict()        
     
-    # Comparar os dados antigos com os dados atualizados para encontrar as diferenças
     changed_fields = {}
     for key, old_value in old_data.items():
         new_value = updated_data.get(key)
