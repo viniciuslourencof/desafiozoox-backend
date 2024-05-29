@@ -19,5 +19,3 @@ uvicorn main:app --reload
 ```
 
 
-```
-
