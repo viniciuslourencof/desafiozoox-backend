@@ -7,8 +7,9 @@ import io
 from datetime import date, datetime
 from typing import Optional, List
 from pydantic import BaseModel
+from dotenv import load_dotenv
 
-
+load_dotenv()
 
 app = FastAPI()
 app_public = FastAPI(openapi_prefix='/public')
@@ -60,7 +61,7 @@ app_public.add_middleware(
 @app_public.post("/items")
 def create_item(item: ItemUpdate):
     item_data = item.model_dump(exclude_unset=True)
-    
+
     if 'data_nascimento' in item_data and item_data['data_nascimento']:
         item_data['data_nascimento'] = item_data['data_nascimento'].isoformat()
 
@@ -110,17 +111,8 @@ def read_item_history(item_id: str):
     return history
     
 if __name__ == '__main__':
-    if os.getenv('ENV') == 'prod':
-        uvicorn.run("main:app",
-                    host="0.0.0.0",
-                    port=80,
-                    reload=True,
-                    ssl_keyfile=f"/code/certs/live/{os.getenv('API_DOMAIN')}/privkey.pem",
-                    ssl_certfile=f"/code/certs/live/{os.getenv('API_DOMAIN')}/fullchain.pem"
-                    )
-    else:
-        uvicorn.run("main:app",
-                    host="0.0.0.0",
-                    port=8000,
-                    reload=True
-                    )
+    uvicorn.run("main:app",
+                host="0.0.0.0",
+                port=8000,
+                reload=True
+                )
